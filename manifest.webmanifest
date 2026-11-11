@@ -1,0 +1,11 @@
+{
+  "name": "Mein Kalender",
+  "short_name": "Kalender",
+  "description": "Persönlicher Kalender mit Wochen- und Monatsansicht.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f5f5fa",
+  "theme_color": "#7567e8",
+  "icons": [{"src":"icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}]
+}

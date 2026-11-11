@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#7567e8">
+  <meta name="description" content="Dein persönlicher Kalender mit Wochen- und Monatsansicht.">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <title>Mein Kalender</title>
+  <style>
+    :root{font-family:system-ui,-apple-system,Segoe UI,sans-serif;color:#202033;background:#f5f5fa;--accent:#7567e8;--line:#e4e3ee;--muted:#77768a;--panel:#fff}
+    *{box-sizing:border-box}body{margin:0;padding:18px;max-width:1000px;margin-inline:auto}
+    button,input,textarea,select{font:inherit}button{cursor:pointer}
+    header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px}
+    h1{font-size:1.45rem;margin:0} .sub{font-size:.82rem;color:var(--muted);margin-top:3px}
+    .primary{background:var(--accent);color:white;border:0;border-radius:11px;padding:10px 15px;font-weight:650}
+    .tabs{display:grid;grid-template-columns:1fr 1fr;background:white;border:1px solid var(--line);padding:4px;border-radius:13px;margin-bottom:14px}
+    .tab{border:0;background:transparent;padding:11px;border-radius:9px;color:var(--muted);font-weight:650}
+    .tab.active{background:#eeecff;color:#5143c7}
+    .panel{background:var(--panel);border:1px solid var(--line);border-radius:15px;padding:15px;margin-bottom:14px}
+    .toolbar{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
+    .toolbar h2{font-size:1.1rem;margin:0}
+    .soft,.navbtn{background:#f7f6fc;border:1px solid var(--line);border-radius:9px;padding:8px 11px}
+    .views{display:flex;gap:5px}.views button.active{background:#eeecff;border-color:#c9c3ff;color:#5143c7}
+    .weekdays,.calendar{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px}
+    .weekdays{margin-top:14px}.weekday{text-align:center;font-size:.75rem;color:var(--muted);padding:5px}
+    .day{min-height:85px;border:1px solid var(--line);background:white;border-radius:9px;padding:6px 4px;text-align:left;min-width:0}
+    .day.today{border:2px solid var(--accent)}.day.selected{background:#eeecff;border-color:#a69cff}
+    .day.other{opacity:.4}.daynum{font-size:.82rem;font-weight:650;text-align:center}
+    .dot{font-size:.68rem;padding:2px 4px;border-radius:4px;margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .muted{color:var(--muted)}.legend{font-size:.75rem;color:var(--muted);margin-top:12px}
+    .event-list{display:grid;gap:9px;margin-top:12px}
+    .event{border:1px solid var(--line);border-left:5px solid var(--event-color);border-radius:10px;padding:11px;background:white}
+    .event-head{display:flex;justify-content:space-between;gap:10px}.event-title{font-weight:650;overflow-wrap:anywhere}
+    .event-meta{font-size:.78rem;color:var(--muted);margin-top:4px}.event-desc{font-size:.9rem;margin-top:8px;white-space:pre-wrap;overflow-wrap:anywhere}
+    .event-actions{display:flex;gap:5px;flex-shrink:0}.event-actions button{border:1px solid var(--line);background:#faf9fd;border-radius:8px;padding:5px 9px}
+    .field{width:100%;border:1px solid var(--line);border-radius:9px;padding:10px;background:#fbfaff;color:#202033;margin-top:5px}
+    label{display:block;font-size:.88rem;font-weight:600;margin-bottom:12px}
+    .hidden{display:none!important}.filters{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+    .empty{text-align:center;padding:22px 8px;color:var(--muted);font-size:.9rem}
+    .overlay{position:fixed;inset:0;background:#0008;display:flex;align-items:center;justify-content:center;padding:14px;z-index:5}
+    .modal{background:white;border-radius:17px;padding:19px;width:min(100%,460px);max-height:92vh;overflow:auto}
+    .modal h2{margin:0 0 15px;font-size:1.15rem}.modal-actions{display:flex;gap:8px}.modal-actions>*{flex:1}
+    .colors{display:flex;gap:12px;flex-wrap:wrap;margin-top:9px}.color{width:29px;height:29px;border:0;border-radius:50%}.color.chosen{outline:2px solid #24233a;outline-offset:3px}
+    .checkrow{display:flex;align-items:center;gap:10px;background:#f8f7fc;border:1px solid var(--line);padding:11px;border-radius:10px;margin-bottom:12px}
+    .checkrow input{width:18px;height:18px;accent-color:var(--accent)}
+    footer{text-align:center;font-size:.75rem;color:var(--muted);padding:8px}
+    @media(max-width:520px){body{padding:12px}.day{min-height:72px;padding:5px 2px}.dot{font-size:.59rem}.filters{grid-template-columns:1fr}.panel{padding:12px}}
+  </style>
+</head>
+<body>
+<header>
+  <div><h1>Mein Kalender</h1><div class="sub">Deine Termine. Deine Planung.</div></div>
+  <button class="primary" id="addTop">＋ Termin</button>
+</header>
+<nav class="tabs" aria-label="Ansichten">
+  <button class="tab active" data-tab="calendar">▦ Kalender</button>
+  <button class="tab" data-tab="list">☷ Terminliste</button>
+</nav>
+<main>
+<section id="calendarPage">
+  <div class="panel">
+    <div class="toolbar">
+      <button class="navbtn" id="prev" aria-label="Zurück">‹</button>
+      <h2 id="period"></h2>
+      <button class="navbtn" id="next" aria-label="Weiter">›</button>
+      <button class="soft" id="today">Heute</button>
+    </div>
+    <div class="toolbar" style="margin-top:12px">
+      <span class="muted" id="viewHint" style="font-size:.8rem">Monatsübersicht</span>
+      <div class="views"><button class="soft active" id="monthView">Monat</button><button class="soft" id="weekView">Woche</button></div>
+    </div>
+    <div class="weekdays"><div class="weekday">Mo</div><div class="weekday">Di</div><div class="weekday">Mi</div><div class="weekday">Do</div><div class="weekday">Fr</div><div class="weekday">Sa</div><div class="weekday">So</div></div>
+    <div class="calendar" id="calendarGrid"></div>
+    <div class="legend">● Termin &nbsp; 🔒 Ganztägig belegt &nbsp; Umrandet = Heute</div>
+  </div>
+  <div class="panel">
+    <div class="toolbar"><h2 id="selectedTitle">Termine</h2><button class="soft" id="addSelected">＋ Hinzufügen</button></div>
+    <div id="selectedEvents" class="event-list"></div>
+  </div>
+</section>
+<section id="listPage" class="hidden">
+  <div class="panel">
+    <h2 style="margin:0">Alle Termine</h2>
+    <input class="field" id="search" type="search" placeholder="⌕ Termine suchen …" aria-label="Termine suchen">
+    <div class="filters">
+      <select class="field" id="filter" aria-label="Termine filtern">
+        <option value="all">Alle Einträge</option><option value="future">Kommende Termine</option><option value="past">Vergangene Termine</option><option value="busy">Belegte Tage</option>
+      </select>
+      <select class="field" id="sort" aria-label="Sortierung"><option value="asc">Älteste zuerst</option><option value="desc">Neueste zuerst</option></select>
+    </div>
+    <div class="muted" id="resultCount" style="font-size:.8rem;margin-top:12px"></div>
+    <div id="allEvents" class="event-list"></div>
+  </div>
+</section>
+</main>
+<footer>Speicherung auf diesem Gerät und in diesem Browser.</footer>
+<div id="modalRoot"></div>
+<script src="app.js"></script>
+</body>
+</html>
