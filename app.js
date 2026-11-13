@@ -18,9 +18,9 @@
   const isBusy=s=>events.some(e=>e.date===s&&e.busy);
 
   function card(e){
-    return `<article class="event" style="--event-color:${esc(e.color)}">
+    return `<article class="event ${e.busy?'busy':''}" style="--event-color:${esc(e.color)}">
       <div class="event-head"><div style="min-width:0">
-        <div class="event-title">${e.busy?'🔒 ':''}${esc(e.name)}</div>
+        <div class="event-title">${esc(e.name)}</div>
         <div class="event-meta">${short(e.date)}${e.busy?' · Ganztägig belegt':''}</div>
         ${e.location?`<div class="event-meta">⌖ ${esc(e.location)}</div>`:''}
       </div><div class="event-actions"><button data-edit="${esc(e.id)}" aria-label="Bearbeiten">✎</button><button data-delete="${esc(e.id)}" aria-label="Löschen">×</button></div></div>
@@ -40,12 +40,14 @@
     }
     $('viewHint').textContent=view==='month'?'Monatsübersicht':'Wochenübersicht';
     $('monthView').classList.toggle('active',view==='month');$('weekView').classList.toggle('active',view==='week');
+    $('calendarGrid').classList.toggle('week',view==='week');
+    $('weekdaysHead').classList.toggle('hidden',view==='week');
     const count=view==='month'?42:7;let html='';
     for(let i=0;i<count;i++){
       const d=new Date(start);d.setDate(start.getDate()+i);const s=key(d),list=dayEvents(s);
-      html+=`<button class="day ${s===key(today)?'today':''} ${s===selected?'selected':''} ${view==='month'&&d.getMonth()!==m?'other':''}" data-date="${s}" aria-label="${full(s)}">
-        <div class="daynum">${d.getDate()}</div>
-        ${isBusy(s)?'<div class="dot">🔒 Belegt</div>':list.slice(0,2).map(e=>`<div class="dot" style="background:${esc(e.color)}22;color:${esc(e.color)}">${esc(e.name)}</div>`).join('')}
+      html+=`<button class="day ${isBusy(s)?'busy':''} ${s===key(today)?'today':''} ${s===selected?'selected':''} ${view==='month'&&d.getMonth()!==m?'other':''}" data-date="${s}" aria-label="${full(s)}">
+        <div class="daynum">${view==='week'?d.toLocaleDateString('de-DE',{weekday:'short',day:'2-digit',month:'2-digit'}):d.getDate()}</div>
+        ${isBusy(s)?'<div class="dot busy">Belegt</div>':list.slice(0,2).map(e=>`<div class="dot" style="background:${esc(e.color)}22;color:${esc(e.color)}">${esc(e.name)}</div>`).join('')}
         ${!isBusy(s)&&list.length>2?`<div class="muted" style="font-size:.65rem">+${list.length-2}</div>`:''}
       </button>`;
     }

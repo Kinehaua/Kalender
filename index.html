@@ -25,6 +25,14 @@
     .views{display:flex;gap:5px}.views button.active{background:#eeecff;border-color:#c9c3ff;color:#5143c7}
     .weekdays,.calendar{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px}
     .weekdays{margin-top:14px}.weekday{text-align:center;font-size:.75rem;color:var(--muted);padding:5px}
+    .calendar.week{grid-template-columns:1fr}
+    .calendar.week .day{min-height:0;display:flex;flex-wrap:wrap;align-items:center;gap:6px;padding:10px}
+    .calendar.week .daynum{text-align:left;min-width:110px}
+    .calendar.week .dot{margin-top:0;max-width:100%}
+    .day.busy{background:#e6e6ec;border-color:#c8c8d2;color:#6b6b7a}
+    .day.busy.selected{background:#d6d6de;border-color:#a0a0b0}
+    .dot.busy{background:#d0d0d8;color:#5a5a6a}
+    .event.busy{background:#ececf1;color:#6b6b7a;--event-color:#9a9aa8}
     .day{min-height:85px;border:1px solid var(--line);background:white;border-radius:9px;padding:6px 4px;text-align:left;min-width:0}
     .day.today{border:2px solid var(--accent)}.day.selected{background:#eeecff;border-color:#a69cff}
     .day.other{opacity:.4}.daynum{font-size:.82rem;font-weight:650;text-align:center}
@@ -71,9 +79,9 @@
       <span class="muted" id="viewHint" style="font-size:.8rem">Monatsübersicht</span>
       <div class="views"><button class="soft active" id="monthView">Monat</button><button class="soft" id="weekView">Woche</button></div>
     </div>
-    <div class="weekdays"><div class="weekday">Mo</div><div class="weekday">Di</div><div class="weekday">Mi</div><div class="weekday">Do</div><div class="weekday">Fr</div><div class="weekday">Sa</div><div class="weekday">So</div></div>
+    <div class="weekdays" id="weekdaysHead"><div class="weekday">Mo</div><div class="weekday">Di</div><div class="weekday">Mi</div><div class="weekday">Do</div><div class="weekday">Fr</div><div class="weekday">Sa</div><div class="weekday">So</div></div>
     <div class="calendar" id="calendarGrid"></div>
-    <div class="legend">● Termin &nbsp; 🔒 Ganztägig belegt &nbsp; Umrandet = Heute</div>
+    <div class="legend">● Termin &nbsp; <span style="color:#6b6b7a">■ Ganztägig belegt (grau)</span> &nbsp; Umrandet = Heute</div>
   </div>
   <div class="panel">
     <div class="toolbar"><h2 id="selectedTitle">Termine</h2><button class="soft" id="addSelected">＋ Hinzufügen</button></div>
