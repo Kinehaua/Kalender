@@ -1,4 +1,4 @@
-const CACHE='mein-kalender-v2';
+const CACHE='mein-kalender-v3';
 const FILES=['./','./index.html','./app.js','./manifest.webmanifest','./icon.svg'];
 self.addEventListener('install',event=>{
   self.skipWaiting();
