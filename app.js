@@ -48,7 +48,7 @@
       const status=isBusy(s)?'busy':list.length?'hasevents':'free';
       html+=`<button class="day ${status} ${s===key(today)?'today':''} ${s===selected?'selected':''} ${view==='month'&&d.getMonth()!==m?'other':''}" data-date="${s}" aria-label="${full(s)}">
         <div class="daynum">${view==='week'?d.toLocaleDateString('de-DE',{weekday:'short',day:'2-digit',month:'2-digit'}):d.getDate()}</div>
-        ${isBusy(s)?'<div class="dot busy">Belegt</div>':list.slice(0,2).map(e=>`<div class="dot ${e.busy?'busy':''}" ${e.busy?'':`style="background:${esc(e.color)}22;color:${esc(e.color)}"`}>${esc(e.name)}</div>`).join('')}
+        ${isBusy(s)?'<div class="dot busy">Belegt</div>':list.slice(0,2).map(e=>`<div class="dot ${e.busy?'busy':''}">${esc(e.name)}</div>`).join('')}
         ${list.length>2?`<div class="muted" style="font-size:.65rem">+${list.length-2}</div>`:''}
       </button>`;
     }
@@ -96,7 +96,7 @@
     });
     $('eventForm').onsubmit=ev=>{
       ev.preventDefault();const f=new FormData(ev.target);
-      const item={id:e?.id||`ev_${Date.now()}_${Math.random().toString(36).slice(2,8)}`,name:f.get('name').trim(),date:f.get('date'),busy:f.get('busy')==='on',description:f.get('description').trim(),location:f.get('location').trim(),color:f.get('color')};
+      const item={id:e?.id||`ev_${Date.now()}_${Math.random().toString(36).slice(2,8)}`,name:f.get('name').trim(),date:f.get('date'),busy:f.get('busy')==='on',description:f.get('description').trim(),location:f.get('location').trim()};
       if(!item.name||!item.date)return;
       const conflicts=events.filter(x=>x.id!==item.id&&x.date===item.date);
       let warning=null;
