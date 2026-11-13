@@ -30,10 +30,14 @@
     .calendar.week .daynum{text-align:left;min-width:90px}
     .calendar.week .dot{font-size:.75rem}
     .calendar.week .day{padding:10px}
-    .day.busy{background:#e6e6ec;border-color:#c8c8d2;color:#6b6b7a}
-    .day.busy.selected{background:#d6d6de;border-color:#a0a0b0}
-    .dot.busy{background:#d0d0d8;color:#5a5a6a}
-    .event.busy{background:#ececf1;color:#6b6b7a;--event-color:#9a9aa8}
+    .day.busy{background:#fde3e3;border-color:#f0a3a3;color:#9b2c2c}
+    .day.free{background:#e3f6ea;border-color:#a8dcbb}
+    .day.hasevents{background:#e1eefb;border-color:#9ccaf0}
+    .day.free.selected{background:#c9edd7;border-color:#5fbf86}
+    .day.hasevents.selected{background:#c8e0f7;border-color:#5aa5e0}
+    .day.busy.selected{background:#f9caca;border-color:#e06666}
+    .dot.busy{background:#f5b5b5;color:#8a1f1f}
+    .event.busy{background:#fdeeee;color:#9b2c2c;--event-color:#d64545}
     .day{min-height:85px;border:1px solid var(--line);background:white;border-radius:9px;padding:6px 4px;text-align:left;min-width:0}
     .day.today{border:2px solid var(--accent)}.day.selected{background:#eeecff;border-color:#a69cff}
     .day.other{opacity:.4}.daynum{font-size:.82rem;font-weight:650;text-align:center}
@@ -60,9 +64,6 @@
       .calendar.week .day{min-height:0;padding:10px}
       .calendar.week .daynum{min-width:90px}
       .calendar.week .dot{font-size:.75rem}
-      .day.busy{background:#e6e6ec;border-color:#c8c8d2;color:#6b6b7a}
-      .day.busy.selected{background:#d6d6de;border-color:#a0a0b0}
-      .dot.busy{background:#d0d0d8;color:#5a5a6a}
     }
   </style>
 </head>
@@ -90,7 +91,7 @@
     </div>
     <div class="weekdays" id="weekdaysHead"><div class="weekday">Mo</div><div class="weekday">Di</div><div class="weekday">Mi</div><div class="weekday">Do</div><div class="weekday">Fr</div><div class="weekday">Sa</div><div class="weekday">So</div></div>
     <div class="calendar" id="calendarGrid"></div>
-    <div class="legend">● Termin &nbsp; <span style="color:#6b6b7a">■ Ganztägig belegt (grau)</span> &nbsp; Umrandet = Heute</div>
+    <div class="legend"><span style="color:#2f9e5f">■ Frei</span> &nbsp; <span style="color:#2f7fc4">■ Mit Terminen</span> &nbsp; <span style="color:#c53030">■ Belegt</span> &nbsp; Umrandet = Heute</div>
   </div>
   <div class="panel">
     <div class="toolbar"><h2 id="selectedTitle">Termine</h2><button class="soft" id="addSelected">＋ Hinzufügen</button></div>

@@ -45,10 +45,11 @@
     const count=view==='month'?42:7;let html='';
     for(let i=0;i<count;i++){
       const d=new Date(start);d.setDate(start.getDate()+i);const s=key(d),list=dayEvents(s);
-      html+=`<button class="day ${isBusy(s)?'busy':''} ${s===key(today)?'today':''} ${s===selected?'selected':''} ${view==='month'&&d.getMonth()!==m?'other':''}" data-date="${s}" aria-label="${full(s)}">
+      const status=isBusy(s)?'busy':list.length?'hasevents':'free';
+      html+=`<button class="day ${status} ${s===key(today)?'today':''} ${s===selected?'selected':''} ${view==='month'&&d.getMonth()!==m?'other':''}" data-date="${s}" aria-label="${full(s)}">
         <div class="daynum">${view==='week'?d.toLocaleDateString('de-DE',{weekday:'short',day:'2-digit',month:'2-digit'}):d.getDate()}</div>
-        ${isBusy(s)?'<div class="dot busy">Belegt</div>':list.slice(0,2).map(e=>`<div class="dot" style="background:${esc(e.color)}22;color:${esc(e.color)}">${esc(e.name)}</div>`).join('')}
-        ${!isBusy(s)&&list.length>2?`<div class="muted" style="font-size:.65rem">+${list.length-2}</div>`:''}
+        ${isBusy(s)?'<div class="dot busy">Belegt</div>':list.slice(0,2).map(e=>`<div class="dot ${e.busy?'busy':''}" ${e.busy?'':`style="background:${esc(e.color)}22;color:${esc(e.color)}"`}>${esc(e.name)}</div>`).join('')}
+        ${list.length>2?`<div class="muted" style="font-size:.65rem">+${list.length-2}</div>`:''}
       </button>`;
     }
     $('calendarGrid').innerHTML=html;
