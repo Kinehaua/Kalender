@@ -84,16 +84,11 @@
         <div class="checkrow"><input type="checkbox" name="busy" id="busyCheck" ${e?.busy?'checked':''}><label for="busyCheck" style="margin:0">Ganztägig als belegt markieren<div class="muted" style="font-size:.75rem;font-weight:400;margin-top:3px">Neue Termine an diesem Tag lösen eine Warnung aus.</div></label></div>
         <label>Beschreibung <span class="muted">(optional)</span><textarea class="field" name="description" rows="3" maxlength="1000" placeholder="Weitere Informationen …">${esc(e?.description||'')}</textarea></label>
         <label>Ort <span class="muted">(optional)</span><input class="field" name="location" maxlength="150" placeholder="Wo findet es statt?" value="${esc(e?.location||'')}"></label>
-        <div style="font-size:.88rem;font-weight:600">Farbe <span class="muted" style="font-weight:400">(optional)</span><div class="colors">${colors.map(c=>`<button type="button" class="color ${((e?.color||colors[0])===c)?'chosen':''}" data-color="${c}" style="background:${c}" aria-label="Farbe ${c}"></button>`).join('')}</div><input type="hidden" name="color" value="${e?.color||colors[0]}"></div>
         <div class="modal-actions" style="margin-top:20px"><button type="button" class="soft" id="cancelModal">Abbrechen</button><button type="submit" class="primary">${e?'Speichern':'Termin erstellen'}</button></div>
       </form>
     </div></div>`;
     $('closeModal').onclick=closeModal;$('cancelModal').onclick=closeModal;
     $('overlay').addEventListener('click',ev=>{if(ev.target.id==='overlay')closeModal();});
-    document.querySelectorAll('[data-color]').forEach(b=>b.onclick=()=>{
-      $('eventForm').elements.color.value=b.dataset.color;
-      document.querySelectorAll('[data-color]').forEach(x=>x.classList.toggle('chosen',x===b));
-    });
     $('eventForm').onsubmit=ev=>{
       ev.preventDefault();const f=new FormData(ev.target);
       const item={id:e?.id||`ev_${Date.now()}_${Math.random().toString(36).slice(2,8)}`,name:f.get('name').trim(),date:f.get('date'),busy:f.get('busy')==='on',description:f.get('description').trim(),location:f.get('location').trim()};
